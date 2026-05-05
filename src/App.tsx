@@ -21,6 +21,9 @@ import {
   EyeOff, 
   Moon, 
   Sun,
+  Database,
+  Grid3X3,
+  ListTree,
   ExternalLink,
   ChevronRight,
   Code as CodeIcon,
@@ -370,6 +373,185 @@ GO
 DROP LOGIN User1;
 GO]`;
 
+const DATA_STRUCTURES_CODE = {
+  stack: `class Stack:  
+    def __init__(self):  
+        self.stack = []  
+ 
+    def is_empty(self):  
+        return len(self.stack) == 0  
+ 
+    def push(self, item):  
+        self.stack.append(item)  
+ 
+    def pop(self):  
+        if self.is_empty():  
+            return "Stack is empty!"  
+        return self.stack.pop()  
+ 
+    def peek(self):  
+        if self.is_empty():  
+            return "Stack is empty!"  
+        return self.stack[-1]  
+ 
+    def size(self):  
+        return len(self.stack)  
+
+    def display(self):  
+        return self.stack  
+
+stack = Stack()  
+stack.push(10)  
+stack.push(20)  
+stack.push(30)  
+print(f"Top element: {stack.peek()}")  # Should print 30  
+print(f"Stack size: {stack.size()}")    # Should print 3  
+print(f"Stack contents: {stack.display()}")  # Should print [10, 20, 30]  
+print(f"Popped element: {stack.pop()}")  # Should print 30  
+print(f"Stack after pop: {stack.display()}")  # Should print [10, 20]`,
+
+  queue: `class Queue: 
+    def __init__(self): 
+        self.queue = [] 
+         
+    def enqueue(self, element): 
+        self.queue.append(element) 
+         
+    def dequeue(self): 
+        if self.isEmpty(): 
+            return "Queue is empty" 
+        return self.queue.pop(0) 
+         
+    def peek(self): 
+        if self.isEmpty(): 
+            return "Queue is empty" 
+        return self.queue[0] 
+         
+    def isEmpty(self): 
+        return len(self.queue) == 0 
+         
+    def size(self): 
+        return len(self.queue) 
+
+myQueue = Queue() 
+myQueue.enqueue('A') 
+myQueue.enqueue('B') 
+myQueue.enqueue('C') 
+print("Queue: ", myQueue.queue) # Should print ['A', 'B', 'C'] 
+print("Dequeue: ", myQueue.dequeue()) # Should print A 
+print("Peek: ", myQueue.peek()) # Should print B 
+print("isEmpty: ", myQueue.isEmpty()) # Should print False 
+print("Size: ", myQueue.size()) # Should print 2`,
+
+  bst_inorder: `class Node: 
+    def __init__(self, key): 
+        self.left = None 
+        self.right = None 
+        self.val = key 
+ 
+def insert(root, key): 
+    if root is None: 
+        return Node(key) 
+    if root.val == key: 
+        return root 
+    if root.val < key: 
+        root.right = insert(root.right, key) 
+    else: 
+        root.left = insert(root.left, key) 
+    return root 
+ 
+def inorder(root): 
+    if root: 
+        inorder(root.left) 
+        print(root.val, end=" ") 
+        inorder(root.right) 
+ 
+# Creating the following BST 
+#             50 
+#            /     \\ 
+#      30          70 
+#     /  \\            /  \\ 
+# 20   40     60   80 
+r = Node(50) 
+r = insert(r, 30) 
+r = insert(r, 20) 
+r = insert(r, 40) 
+r = insert(r, 70) 
+r = insert(r, 60) 
+r = insert(r, 80) 
+print("In-order traversal: ") 
+inorder(r) 
+#Output :   20     30     40     50     60     70     80`,
+
+  bst_preorder: `class Node: 
+    def __init__(self, key): 
+        self.left = None 
+        self.right = None 
+        self.val = key 
+ 
+def insert(root, key): 
+    if root is None: 
+        return Node(key) 
+    if root.val == key: 
+        return root 
+    if root.val < key: 
+        root.right = insert(root.right, key) 
+    else: 
+        root.left = insert(root.left, key) 
+    return root 
+ 
+def preorder(root): 
+    if root: 
+        print(root.val, end=" ")   
+        preorder(root.left)        
+        preorder(root.right)       
+
+r = Node(50) 
+r = insert(r, 30) 
+r = insert(r, 20) 
+r = insert(r, 40) 
+r = insert(r, 70) 
+r = insert(r, 60) 
+r = insert(r, 80) 
+print("Pre-order traversal: ") 
+preorder(r) 
+#Output:   50     30     20     40     70     60     80`,
+
+  bst_postorder: `class Node: 
+    def __init__(self, key): 
+        self.left = None 
+        self.right = None 
+        self.val = key 
+ 
+def insert(root, key): 
+    if root is None: 
+        return Node(key) 
+    if root.val == key: 
+        return root 
+    if root.val < key: 
+        root.right = insert(root.right, key) 
+    else: 
+        root.left = insert(root.left, key) 
+    return root 
+ 
+def postorder(root): 
+    if root: 
+        postorder(root.left)       
+        postorder(root.right)      
+        print(root.val, end=" ")   
+
+r = Node(50) 
+r = insert(r, 30) 
+r = insert(r, 20) 
+r = insert(r, 40) 
+r = insert(r, 70) 
+r = insert(r, 60) 
+r = insert(r, 80) 
+print("Post-order traversal: ") 
+postorder(r) 
+#Output:   20     40     30     60     80     70     50`
+};
+
 // --- Components ---
 
 const CodeSnippet = ({ title, code, language }: { title: string; code: string; language: string }) => {
@@ -556,7 +738,8 @@ export default function App() {
               <div className="flex-1 px-4 space-y-1">
                 {[
                   { id: 'algorithms', label: 'Algorithms & Crypto', icon: CodeIcon },
-                  { id: 'database', label: 'Database Schemes', icon: ChevronRight },
+                  { id: 'database', label: 'Database Schemes', icon: Database },
+                  { id: 'data-structures', label: 'Data Structures', icon: ListTree },
                   { id: 'notes', label: 'Academic Notes', icon: User },
                   { id: 'links', label: 'Secure Access', icon: ExternalLink },
                 ].map((item) => (
@@ -646,6 +829,46 @@ export default function App() {
                         code={'CREATE DATABASE' + PRE_POPULATED_CODE.split('CREATE DATABASE')[1].split(']')[0]}
                       />
                     </div>
+                  )}
+
+                  {activeTab === 'data-structures' && (
+                    <>
+                      <div className="space-y-4">
+                        <CodeSnippet 
+                          title="stack_implementation.py"
+                          language="python"
+                          code={DATA_STRUCTURES_CODE.stack}
+                        />
+                      </div>
+                      <div className="space-y-4">
+                        <CodeSnippet 
+                          title="queue_implementation.py"
+                          language="python"
+                          code={DATA_STRUCTURES_CODE.queue}
+                        />
+                      </div>
+                      <div className="space-y-4">
+                        <CodeSnippet 
+                          title="bst_inorder.py"
+                          language="python"
+                          code={DATA_STRUCTURES_CODE.bst_inorder}
+                        />
+                      </div>
+                      <div className="space-y-4">
+                        <CodeSnippet 
+                          title="bst_preorder.py"
+                          language="python"
+                          code={DATA_STRUCTURES_CODE.bst_preorder}
+                        />
+                      </div>
+                      <div className="space-y-4">
+                        <CodeSnippet 
+                          title="bst_postorder.py"
+                          language="python"
+                          code={DATA_STRUCTURES_CODE.bst_postorder}
+                        />
+                      </div>
+                    </>
                   )}
 
                   {activeTab === 'notes' && (
